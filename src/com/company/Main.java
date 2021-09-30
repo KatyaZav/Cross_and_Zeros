@@ -10,6 +10,7 @@ public class Main {
     public static char[][] field;
     public static int Size = 3;
     public static boolean actor = true;
+    public static int NotProgrammer;
 
     public static String[] Congratulation = new String[]{"молодец-огурец!","победил! Поздравляшки!",
             "- герой этого поля. Молодец!", "- чемпион! Гип-гип Ура!",
@@ -30,11 +31,17 @@ public class Main {
             "Давайте еще партейку?"};
 
     public static void main(String[] args) {
+        System.out.println("Удобна ли вам нумерация с 0? \n" +
+                "1 - да, 2 - нет");
+        Scanner in = new Scanner(System.in);
+        int b = in.nextInt();
+        if (b==1)
+            NotProgrammer = 0;
+        else NotProgrammer = 1;
         System.out.println("Правила просты: первый игрок - крестики, второй - нолики. \n" +
                 "Хотите включить бота?\n"+
                 "1 - да, 2 - нет. Итак?");
-        Scanner in = new Scanner(System.in);
-        int a = in.nextInt();
+                int a = in.nextInt();
         if (a==1){
             System.out.println("Он глупенький, но попытается...");
             AutoOn = true;
@@ -68,7 +75,7 @@ public class Main {
         boolean end = false;
         while(true) {
             Playtime();
-            System.out.println("Еще раз?" +
+            System.out.println("Еще раз?\n" +
                     "1 - да, 2 - нет");
             while (true){
                 int a = in.nextInt();
@@ -177,8 +184,8 @@ public class Main {
         int x,y;
         Scanner in = new Scanner(System.in);
         while(true) {
-            x = in.nextInt();
-            y = in.nextInt();
+            x = in.nextInt()-NotProgrammer;
+            y = in.nextInt()-NotProgrammer;
             if (x>=Size || x<0 || y>=Size || y<0){
                 System.out.println(BanWords[(int)(Math.random()*(BanWords.length-1))]);
             }
