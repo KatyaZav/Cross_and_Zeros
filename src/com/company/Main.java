@@ -1,27 +1,98 @@
 package com.company;
+import java.io.Console;
+import java.net.SocketOption;
 import java.util.Scanner;
 import java.util.logging.ConsoleHandler;
 
 public class Main {
 
-    public static char[][] field = new char[3][3];
+    public static char[][] field;
     public static int Size = 3;
     public static String[] Congratulation = new String[]{"молодец-огурец!","победил! Поздравляшки!",
             "- герой этого поля. Молодец!", "- чемпион! Гип-гип Ура!",
             "- победитель! Шампанского!", "игрок победитель!", "победил, а у меня закончились поздравления",
             "окончил игру с победой!","получает шоколадку за победу", "WINNER"};
+    public static String[] BanWords = new String[]{"Не позволю!","Жулик!", "Читер!", "Вы ошиблись",
+            "Ошибка", "Я могу и буду ругаться", "Я скромно стою в стороне и слежу за порядком",
+            "Прояви уважение к правилам игры!", "Ооой. Что-то пошло не так...","...",
+            "Научите бота ругаться при нарушении правил...", "Кто-то очепятался",
+            "Пока вы ищите ошибку, прорекламирую..."};
+    public static String[] BanSen = new String[]{"А поле-то занято!",
+            "Пропуск хода за невнимательность. Шутка, я теперь умею проверять ввод до послднего :)",
+            "Вы ошиблись координатами. Бывает", "...", "Поле занято", "Ай, поле занято...",
+            "Хочу мороженку, а не вот это вот все...", "Где-то ошибка, но где не скажу",
+            "Ищите ошибку", "Кто-то очепятался", "Пока вы ищите ошибку, прорекламирую..."};
+    public static String[] DrawWord = new String[]{"Шах и... Пат","Ничья!",
+            "Победа, поражение... Ничья", "Ну... Поле кончилось",
+            "Давайте еще партейку?"};
 
     public static void main(String[] args) {
+        System.out.println("Правила просты: первый игрок - крестики, второй - нолики. \n" +
+                "Хотите включить бота?\n"+
+                "1 - да, 2 - нет. Итак?");
+        Scanner in = new Scanner(System.in);
+        int a = in.nextInt();
+        if (a==1){
+            System.out.println("Придется добавить...");
+        }
+        else if (a==2){
+            Loop();
+        }
+        else {
+            System.out.println("Ну я же просил... Окей, еще одна попытка\n" +
+                    "1 - бот, 2 - реальный игрок. Ваш выбор?");
+            while (true){
+                a = in.nextInt();
+                if (a==1){
+                    System.out.println("Придется добавить...");
+                    break;
+                }
+                if (a==2){
+                    Loop();
+                    break;
+                }
+                System.out.println("1 - бот, 2 - реал");
+            }
+        }
+    }
 
-        for (int i=0; i<3;i++){
-            for (int j=0;j<3;j++) {
+    public static void Loop(){
+        Scanner in = new Scanner(System.in);
+        boolean end = false;
+        while(true) {
+            Playtime();
+            System.out.println("Еще раз?" +
+                    "1 - да, 2 - нет");
+            while (true){
+                if (in.nextInt()==2){
+                    System.out.println("Пока-пока!");
+                    end = true;
+                    break;
+                }
+                if (in.nextInt()==1){
+                    System.out.println("Супер, погнали!");
+                    break;
+                }
+            }
+            if (end)
+                break;
+        }
+    }
+
+    public static void Playtime(){
+        Scanner in = new Scanner(System.in);
+        System.out.println("Введите желаемые размеры поля (Одно число).");
+        Size = in.nextInt();
+        field = new char[Size][Size];
+
+        for (int i=0; i<Size;i++){
+            for (int j=0;j<Size;j++) {
                 field[i][j]='.';
             }
         }
         boolean actor = true;
 
         while(true) {
-
             if (actor){
                 System.out.println("Введите ваши координаты, игрок Первый");
                 InputData(1);
@@ -35,14 +106,12 @@ public class Main {
                 PrintPole(field);
             }
 
-            if (IsWinPosition(1)) {
-                //System.out.println("Первый молодец-огурец!");
+            if (IsDrawPosition())
                 break;
-            }
-            if (IsWinPosition(2)){
-                //System.out.println("Второй молодец-огурец!");
+            if (IsWinPosition(1))
                 break;
-            }
+            if (IsWinPosition(2))
+                break;
         }
     }
 
@@ -52,11 +121,11 @@ public class Main {
         while(true) {
             x = in.nextInt();
             y = in.nextInt();
-            if (x>=3 || x<0 || y>=3 || y<0){
-                System.out.println("Не позволю!");
+            if (x>=Size || x<0 || y>=Size || y<0){
+                System.out.println(BanWords[(int)(Math.random()*(BanWords.length-1))]);
             }
             else if (field[x][y] != '.') {
-                System.out.println("Поле занято! Пропуск хода за невнимательность! Шутка, жду новое значение"); //пофиксить
+                System.out.println(BanSen[(int)(Math.random()*(BanSen.length-1))]);
             }
             else break;
         }
@@ -65,6 +134,23 @@ public class Main {
         }
         else{
             field[x][y] = 'O';
+        }
+    }
+
+    public static boolean IsDrawPosition(){
+        boolean emptyPosition = false;
+        for (int i = 0; i<Size;i++){
+            for (int j = 0;j<Size;j++) {
+                if (field[i][j]=='.')
+                    emptyPosition = true;
+            }
+        }
+        if (emptyPosition){
+            return false;
+        }
+        else{
+            System.out.println(DrawWord[(int)(Math.random()*(DrawWord.length-1))]);
+            return true;
         }
     }
 
@@ -125,8 +211,8 @@ public class Main {
     }
 
     public static void PrintPole(char[][] pole){
-        for (int i=0; i<3;i++){
-            for (int j=0;j<3;j++){
+        for (int i=0; i<Size;i++){
+            for (int j=0;j<Size;j++){
                 System.out.print(pole[i][j]);
                 }
             System.out.println();
