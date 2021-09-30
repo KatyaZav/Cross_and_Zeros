@@ -5,9 +5,12 @@ import java.util.Scanner;
 import java.util.logging.ConsoleHandler;
 
 public class Main {
-
+    public static boolean AutoOn = false;
+    public static boolean RealPlayerFirst = true;
     public static char[][] field;
     public static int Size = 3;
+    public static boolean actor = true;
+
     public static String[] Congratulation = new String[]{"молодец-огурец!","победил! Поздравляшки!",
             "- герой этого поля. Молодец!", "- чемпион! Гип-гип Ура!",
             "- победитель! Шампанского!", "игрок победитель!", "победил, а у меня закончились поздравления",
@@ -33,7 +36,9 @@ public class Main {
         Scanner in = new Scanner(System.in);
         int a = in.nextInt();
         if (a==1){
-            System.out.println("Придется добавить...");
+            System.out.println("Он глупенький, но попытается...");
+            AutoOn = true;
+            Loop();
         }
         else if (a==2){
             Loop();
@@ -44,7 +49,9 @@ public class Main {
             while (true){
                 a = in.nextInt();
                 if (a==1){
-                    System.out.println("Придется добавить...");
+                    System.out.println("Он глупенький... Но постарается");
+                    AutoOn = true;
+                    Loop();
                     break;
                 }
                 if (a==2){
@@ -64,13 +71,19 @@ public class Main {
             System.out.println("Еще раз?" +
                     "1 - да, 2 - нет");
             while (true){
-                if (in.nextInt()==2){
+                int a = in.nextInt();
+                if (a ==2){
                     System.out.println("Пока-пока!");
                     end = true;
                     break;
                 }
-                if (in.nextInt()==1){
+                if (a==1){
                     System.out.println("Супер, погнали!");
+                    if (AutoOn) {
+                        RealPlayerFirst = !RealPlayerFirst;
+                        System.out.println("Вы меняетесь с ботом местами");
+                        actor = !actor;
+                    }
                     break;
                 }
             }
@@ -80,9 +93,14 @@ public class Main {
     }
 
     public static void Playtime(){
-        Scanner in = new Scanner(System.in);
-        System.out.println("Введите желаемые размеры поля (Одно число).");
-        Size = in.nextInt();
+        if (!AutoOn) {
+            Scanner in = new Scanner(System.in);
+            System.out.println("Введите желаемые размеры поля (Одно число).");
+            int a = in.nextInt();
+            if (a>0)
+                Size = a;
+            else Size = 3;
+        }
         field = new char[Size][Size];
 
         for (int i=0; i<Size;i++){
@@ -90,20 +108,29 @@ public class Main {
                 field[i][j]='.';
             }
         }
-        boolean actor = true;
 
         while(true) {
             if (actor){
-                System.out.println("Введите ваши координаты, игрок Первый");
-                InputData(1);
-                actor = false;
-                PrintPole(field);
+                if (AutoOn&&!RealPlayerFirst){
+                    EasyBot();
+                }
+                else {
+                    System.out.println("Введите ваши координаты, игрок Первый");
+                    InputData(1);
+                    actor = false;
+                    PrintPole();
+                }
             }
             else{
-                System.out.println("Введите ваши координаты, игрок Второй");
-                InputData(2);
-                actor = true;
-                PrintPole(field);
+                if (AutoOn&&RealPlayerFirst){
+                    EasyBot();
+                }
+                else {
+                    System.out.println("Введите ваши координаты, игрок Второй");
+                    InputData(2);
+                    actor = true;
+                    PrintPole();
+                }
             }
 
             if (IsDrawPosition())
@@ -113,6 +140,37 @@ public class Main {
             if (IsWinPosition(2))
                 break;
         }
+    }
+
+    public static void EasyBot(){
+        char boot;
+        System.out.println("Ходит бот");
+        if (RealPlayerFirst)
+            boot = 'O';
+        else boot = 'X';
+        if (field[1][1]=='.')
+            field[1][1]=boot;
+        else if (field[0][0]=='.'||
+                field[2][2]=='.'||
+                field[2][0]=='.'||
+                field[0][2]=='.') {
+            if (field[0][0]=='.')
+                field[0][0]=boot;
+            else if (field[2][2]=='.')
+                field[2][2]=boot;
+            else if (field[2][0]=='.')
+                field[2][0]=boot;
+            else field[0][2]=boot;
+        }
+        else if(field[1][0]=='.')
+            field[1][0]=boot;
+        else if (field[0][1]=='.')
+            field[0][1]=boot;
+        else if (field[1][2]=='.')
+            field[1][2]=boot;
+        else field[2][1]=boot;
+        PrintPole();
+        actor = !actor;
     }
 
     public static void InputData(int player){
@@ -210,10 +268,10 @@ public class Main {
         return false;
     }
 
-    public static void PrintPole(char[][] pole){
+    public static void PrintPole(){
         for (int i=0; i<Size;i++){
             for (int j=0;j<Size;j++){
-                System.out.print(pole[i][j]);
+                System.out.print(field[i][j]);
                 }
             System.out.println();
         }
