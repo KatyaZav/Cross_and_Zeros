@@ -3,14 +3,15 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static char[][] pole = new char[3][3];
+    public static char[][] field = new char[3][3];
+    public static int Size = 3;
 
     public static void main(String[] args) {
         int x = 0;
         int y = 0;
         for (int i=0; i<3;i++){
             for (int j=0;j<3;j++) {
-                pole[i][j]='.';
+                field[i][j]='.';
             }
         }
         boolean actor = true;
@@ -21,65 +22,106 @@ public class Main {
                 System.out.println("Введите ваши координаты, игрок Первый");
                 InputData(1);
                 actor = false;
-                PrintPole(pole);
+                PrintPole(field);
             }
             else{
                 System.out.println("Введите ваши координаты, игрок Второй");
                 InputData(2);
                 actor = true;
-                PrintPole(pole);
+                PrintPole(field);
             }
 
-            if(IsWin(1)){
+
+            if (IsWinPosition(1)) {
+            //if(IsWin(1)){
                 System.out.println("Первый молодец-огурец!");
                 break;
             }
-            if (IsWin(2)){
+            if (IsWinPosition(2)){
+            //if (IsWin(2)){
                 System.out.println("Второй молодец-огурец!");
                 break;
             }
 
         }
     }
-    
+
     public static void InputData(int player){
         int x,y;
         Scanner in = new Scanner(System.in);
         while(true) {
             x = in.nextInt();
             y = in.nextInt();
-            if (x>3 || x<0 || y>3 || y<0){
+            if (x>=3 || x<0 || y>=3 || y<0){
                 System.out.println("Не позволю!");
             }
-            else if (pole[x][y] != '.') {
+            else if (field[x][y] != '.') {
                 System.out.println("Поле занято! Пропуск хода за невнимательность! Шутка, жду новое значение"); //пофиксить
             }
             else break;
         }
         if (player == 1){
-            pole[x][y] = 'X';
+            field[x][y] = 'X';
         }
         else{
-            pole[x][y] = 'O';
+            field[x][y] = 'O';
         }
 
     }
 
-    public static boolean IsWin(int player){
-        char ch;
+    public static boolean IsWinPosition(int player){
+       char ch;
         if (player == 1)
             ch = 'X';
         else ch = 'O';
-        if ((pole[0][0]==ch && pole[1][1]==ch && pole[2][2]==ch)||
-                (pole[0][0]==ch && pole[0][1]==ch && pole[0][2]==ch)||
-                (pole[1][0]==ch && pole[1][1]==ch && pole[1][2]==ch)||
-                (pole[2][0]==ch && pole[2][1]==ch && pole[2][2]== ch)||
-                (pole[0][0]==ch && pole[0][1]==ch && pole[0][2]==ch)||
-                (pole[1][0]==ch && pole[1][1]==ch && pole[1][2]==ch)||
-                (pole[2][0]==ch && pole[2][1]==ch && pole[2][2]==ch)){
+
+        if (CheckDiagonals(ch)){
             return true;
         }
+        if (CheckLines(ch)){
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean CheckDiagonals(char ch){
+        int dial1,dial2;
+        dial1 = 1;
+        dial2 = 1;
+        for (int i = 0; i<Size;i++){
+            if (field[i][i]==ch){
+                dial1 *= 1;
+            }
+            else dial1 *= 0;
+
+            if (field[i][Size-1-i]==ch){
+                dial2 *= 1;
+            }
+            else dial2 *= 0;
+        }
+        if (dial1 == 1 || dial2 == 1)
+            return true;
         else return false;
+    }
+
+    public static boolean CheckLines(char ch){
+        int check_i, check_j;
+        for (int i = 0; i<Size;i++){
+            check_i = 1;
+            check_j = 1;
+            for (int j = 0;j<Size;j++){
+                if (field[i][j]!=ch){
+                    check_i *= 0;
+                }
+                if (field[j][i]!=ch){
+                    check_j *= 0;
+                }
+            }
+            if (check_i == 1 || check_j == 1)
+                return true;
+        }
+        return false;
     }
 
     public static void PrintPole(char[][] pole){
