@@ -1,14 +1,18 @@
 package com.company;
 import java.util.Scanner;
+import java.util.logging.ConsoleHandler;
 
 public class Main {
 
     public static char[][] field = new char[3][3];
     public static int Size = 3;
+    public static String[] Congratulation = new String[]{"молодец-огурец!","победил! Поздравляшки!",
+            "- герой этого поля. Молодец!", "- чемпион! Гип-гип Ура!",
+            "- победитель! Шампанского!", "игрок победитель!", "победил, а у меня закончились поздравления",
+            "окончил игру с победой!","получает шоколадку за победу", "WINNER"};
 
     public static void main(String[] args) {
-        int x = 0;
-        int y = 0;
+
         for (int i=0; i<3;i++){
             for (int j=0;j<3;j++) {
                 field[i][j]='.';
@@ -31,18 +35,14 @@ public class Main {
                 PrintPole(field);
             }
 
-
             if (IsWinPosition(1)) {
-            //if(IsWin(1)){
-                System.out.println("Первый молодец-огурец!");
+                //System.out.println("Первый молодец-огурец!");
                 break;
             }
             if (IsWinPosition(2)){
-            //if (IsWin(2)){
-                System.out.println("Второй молодец-огурец!");
+                //System.out.println("Второй молодец-огурец!");
                 break;
             }
-
         }
     }
 
@@ -66,7 +66,6 @@ public class Main {
         else{
             field[x][y] = 'O';
         }
-
     }
 
     public static boolean IsWinPosition(int player){
@@ -76,12 +75,13 @@ public class Main {
         else ch = 'O';
 
         if (CheckDiagonals(ch)){
+            MakeCongratulation(player);
             return true;
         }
         if (CheckLines(ch)){
+            MakeCongratulation(player);
             return true;
         }
-
         return false;
     }
 
@@ -128,8 +128,17 @@ public class Main {
         for (int i=0; i<3;i++){
             for (int j=0;j<3;j++){
                 System.out.print(pole[i][j]);
-            }
+                }
             System.out.println();
         }
+    }
+
+    public static void MakeCongratulation(int player){
+        String name;
+        if (player == 1)
+            name = "Первый";
+        else
+            name = "Второй";
+        System.out.println(name + " "+ Congratulation[(int)(Math.random()*(Congratulation.length-1))]);
     }
 }
