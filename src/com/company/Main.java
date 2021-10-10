@@ -290,15 +290,18 @@ class Player {
     static int NotProgrammer = 0;
     static String Name;
     static char Symvol;
-    static int Player;
+    public int Player;
 
-    Player(int player, String name, char sym){
+    Player(int player, String name, char sym, int pr){
         Name = name;
         Player = player;
         Symvol = sym;
+        if (pr==1)
+            NotProgrammer = 0;
+        else NotProgrammer = 1;
     }
 
-    public static void GetStep(){ //remake
+    public void GetStep(){ //remake
         int x,y;
         Scanner in = new Scanner(System.in);
         while(true) {
@@ -349,7 +352,7 @@ class Player {
  }
 
  class Game{
-     private static String[] Congratulation = new String[]{"молодец-огурец!","победил! Поздравляшки!",
+      private static String[] Congratulation = new String[]{"молодец-огурец!","победил! Поздравляшки!",
              "- герой этого поля. Молодец!", "- чемпион! Гип-гип Ура!",
              "- победитель! Шампанского!", "игрок победитель!", "победил, а у меня закончились поздравления",
              "окончил игру с победой!","получает шоколадку за победу", "WINNER"};
@@ -367,13 +370,17 @@ class Player {
              "Победа, поражение... Ничья", "Ну... Поле кончилось",
              "Давайте еще партейку?"};
 
-     public static void MakeCongratulation(int player){ //переделать
+     public static void PrintCongratulation(Player player){ //переделать
          String name;
-         if (player == 1)
+         if (player.Player == 1)
              name = "Первый";
          else
              name = "Второй";
          System.out.println(name + " "+ Congratulation[(int)(Math.random()*(Congratulation.length-1))]);
+     }
+
+     public static void PrintBotWin(){
+         //добавить словарь со словами бота
      }
 
      public static void PrintDraw(){
