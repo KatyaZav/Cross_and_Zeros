@@ -16,19 +16,6 @@ public class Main {
             "- герой этого поля. Молодец!", "- чемпион! Гип-гип Ура!",
             "- победитель! Шампанского!", "игрок победитель!", "победил, а у меня закончились поздравления",
             "окончил игру с победой!","получает шоколадку за победу", "WINNER"};
-    public static String[] BanWords = new String[]{"Не позволю!","Жулик!", "Читер!", "Вы ошиблись",
-            "Ошибка", "Я могу и буду ругаться", "Я скромно стою в стороне и слежу за порядком",
-            "Прояви уважение к правилам игры!", "Ооой. Что-то пошло не так...","...",
-            "Научите бота ругаться при нарушении правил...", "Кто-то очепятался",
-            "Пока вы ищите ошибку, прорекламирую..."};
-    public static String[] BanSen = new String[]{"А поле-то занято!",
-            "Пропуск хода за невнимательность. Шутка, я теперь умею проверять ввод до послднего :)",
-            "Вы ошиблись координатами. Бывает", "...", "Поле занято", "Ай, поле занято...",
-            "Хочу мороженку, а не вот это вот все...", "Где-то ошибка, но где не скажу",
-            "Ищите ошибку", "Кто-то очепятался", "Пока вы ищите ошибку, прорекламирую..."};
-    public static String[] DrawWord = new String[]{"Шах и... Пат","Ничья!",
-            "Победа, поражение... Ничья", "Ну... Поле кончилось",
-            "Давайте еще партейку?"};
 
     public static void main(String[] args) {
         System.out.println("Удобна ли вам нумерация с 0? \n" +
@@ -187,10 +174,10 @@ public class Main {
             x = in.nextInt()-NotProgrammer;
             y = in.nextInt()-NotProgrammer;
             if (x>=Size || x<0 || y>=Size || y<0){
-                System.out.println(BanWords[(int)(Math.random()*(BanWords.length-1))]);
+                Game.PrintBan();
             }
             else if (field[x][y] != '.') {
-                System.out.println(BanSen[(int)(Math.random()*(BanSen.length-1))]);
+                Game.PrintSenBan();
             }
             else break;
         }
@@ -214,7 +201,7 @@ public class Main {
             return false;
         }
         else{
-            System.out.println(DrawWord[(int)(Math.random()*(DrawWord.length-1))]);
+            Game.PrintDraw();
             return true;
         }
     }
@@ -293,3 +280,119 @@ public class Main {
         System.out.println(name + " "+ Congratulation[(int)(Math.random()*(Congratulation.length-1))]);
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////////
+//OOP
+///////////////////////////////////////////////////////////////////////////////////
+
+//какая логика у порядка игрок-игрок и игрок-бот
+class Player {
+    static int NotProgrammer = 0;
+    static String Name;
+    static char Symvol;
+    static int Player;
+
+    Player(int player, String name, char sym){
+        Name = name;
+        Player = player;
+        Symvol = sym;
+    }
+
+    public static void GetStep(){ //remake
+        int x,y;
+        Scanner in = new Scanner(System.in);
+        while(true) {
+            x = in.nextInt()-NotProgrammer;
+            y = in.nextInt()-NotProgrammer;
+            if (x>= Field.Size || x<0 || y>=Field.Size || y<0){
+                Game.PrintBan();
+            }
+            else if (Field.Field[x][y] != '.') {
+                Game.PrintSenBan();
+            }
+            else break;
+        }
+        if (Player == 1){
+            Field.Field[x][y] = 'X';
+        }
+        else{
+            Field.Field[x][y] = 'O';
+        }
+    }
+ }
+
+ class Field {
+    static int Size;
+    static char[][] Field;
+
+    Field(int size){
+        Size = size;
+        Field = new char[Size][Size];
+
+        for (int i=0; i<Size;i++){
+            for (int j=0;j<Size;j++) {
+                Field[i][j]='.';
+            }
+        }
+    }
+
+    //add
+
+    public static void Print(){
+        for (int i=0; i<Size;i++){
+            for (int j=0;j<Size;j++){
+                System.out.print(Field[i][j]);
+            }
+            System.out.println();
+        }
+    }
+ }
+
+ class Game{
+     private static String[] Congratulation = new String[]{"молодец-огурец!","победил! Поздравляшки!",
+             "- герой этого поля. Молодец!", "- чемпион! Гип-гип Ура!",
+             "- победитель! Шампанского!", "игрок победитель!", "победил, а у меня закончились поздравления",
+             "окончил игру с победой!","получает шоколадку за победу", "WINNER"};
+     private static String[] BanWords = new String[]{"Не позволю!","Жулик!", "Читер!", "Вы ошиблись",
+             "Ошибка", "Я могу и буду ругаться", "Я скромно стою в стороне и слежу за порядком",
+             "Прояви уважение к правилам игры!", "Ооой. Что-то пошло не так...","...",
+             "Научите бота ругаться при нарушении правил...", "Кто-то очепятался",
+             "Пока вы ищите ошибку, прорекламирую..."};
+     private static String[] BanSen = new String[]{"А поле-то занято!",
+             "Пропуск хода за невнимательность. Шутка, я теперь умею проверять ввод до последнего :)",
+             "Вы ошиблись координатами. Бывает", "...", "Поле занято", "Ай, поле занято...",
+             "Хочу мороженку, а не вот это вот все...", "Где-то ошибка, но где не скажу",
+             "Ищите ошибку", "Кто-то очепятался", "Пока вы ищите ошибку, прорекламирую..."};
+     private static String[] DrawWord = new String[]{"Шах и... Пат","Ничья!",
+             "Победа, поражение... Ничья", "Ну... Поле кончилось",
+             "Давайте еще партейку?"};
+
+     public static void MakeCongratulation(int player){ //переделать
+         String name;
+         if (player == 1)
+             name = "Первый";
+         else
+             name = "Второй";
+         System.out.println(name + " "+ Congratulation[(int)(Math.random()*(Congratulation.length-1))]);
+     }
+
+     public static void PrintDraw(){
+         System.out.println(DrawWord[(int)(Math.random()*(DrawWord.length-1))]);
+     }
+
+     public static void PrintBan(){
+         System.out.println(BanWords[(int)(Math.random()*(BanWords.length-1))]);
+     }
+
+     public static void PrintSenBan(){
+         System.out.println(BanSen[(int)(Math.random()*(BanSen.length-1))]);
+     }
+
+     public static void StartGame(){
+         //start game
+     }
+ }
+
+ class Bot{
+    //add
+ }
